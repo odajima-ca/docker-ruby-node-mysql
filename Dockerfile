@@ -1,5 +1,7 @@
 FROM ruby:2.2.3
 
+ENV TZ Asia/Tokyo
+
 RUN apt-get update -qq
 
 RUN apt-get update \
