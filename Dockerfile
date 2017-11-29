@@ -2,6 +2,12 @@ FROM ruby:2.2.3
 
 RUN apt-get update -qq
 
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    mysql-client-5.5 \
+  \
+  && rm -rf /var/lib/apt/lists/*
+      
 # Setup node
 ENV NODE_VERSION=8.x
 RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION | bash \
