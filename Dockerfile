@@ -4,7 +4,7 @@ ENV TZ Asia/Tokyo
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    mysql-client-5.5 \
+    mysql-client \
   \
   && rm -rf /var/lib/apt/lists/*
       
