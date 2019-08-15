@@ -3,10 +3,13 @@ FROM ruby:2.4.4
 ENV TZ Asia/Tokyo
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-    mysql-client \
-  \
-  && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      default-libmysqlclient-dev \
+      mysql-client \
+      apt-utils \
+    \
+    && rm -rf /var/lib/apt/lists/*
       
 # Setup node
 ENV NODE_VERSION=8.x
