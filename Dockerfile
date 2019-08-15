@@ -15,4 +15,4 @@ RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION | bash \
 
 # Setup yarn
 ENV PATH /root/.yarn/bin:$PATH
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.28.4
