@@ -8,6 +8,7 @@ RUN apt-get update \
       default-libmysqlclient-dev \
       mysql-client \
       apt-utils \
+      xvfb \
     \
     && rm -rf /var/lib/apt/lists/*
 
