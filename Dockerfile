@@ -4,42 +4,30 @@ ENV TZ Asia/Tokyo
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-      ca-certificates \
-      default-libmysqlclient-dev \
-      mysql-client \
-      apt-utils \
-      xvfb \
+        ca-certificates \
+        default-libmysqlclient-dev \
+        mysql-client \
+        apt-utils \
+        xvfb \
+        wget \
+        curl \
     \
     && rm -rf /var/lib/apt/lists/*
 
-# Install the latest versions of Google Chrome and Chromedriver:
-RUN export DEBIAN_FRONTEND=noninteractive \
+# Setup Chrome driver
+RUN apt-get update \
+    && apt-get install -y unzip \
+    && CHROME_DRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` \
+    && wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/ \
+    && unzip ~/chromedriver_linux64.zip -d ~/ \
+    && rm ~/chromedriver_linux64.zip \
+    && chown root:root ~/chromedriver \
+    && chmod 755 ~/chromedriver \
+    && mv ~/chromedriver /usr/bin/chromedriver \
+    && sh -c 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -' \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
     && apt-get update \
-    && apt-get install \
-        unzip \
-    && \
-        DL=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && curl -sL "$DL" > /tmp/chrome.deb \
-    && apt install --no-install-recommends --no-install-suggests -y \
-        /tmp/chrome.deb \
-    && CHROMIUM_FLAGS='--no-sandbox --disable-dev-shm-usage' \
-    # Patch Chrome launch script and append CHROMIUM_FLAGS to the last line:
-    && sed -i '${s/$/'" $CHROMIUM_FLAGS"'/}' /opt/google/chrome/google-chrome \
-    && BASE_URL=https://chromedriver.storage.googleapis.com \
-    && VERSION=$(curl -sL "$BASE_URL/LATEST_RELEASE") \
-    && curl -sL "$BASE_URL/$VERSION/chromedriver_linux64.zip" -o /tmp/driver.zip \
-    && unzip /tmp/driver.zip \
-    && mv chromedriver /usr/local/bin/ \
-    # Remove obsolete files:
-    && apt-get autoremove --purge -y \
-        unzip \
-    && apt-get clean \
-    && rm -rf \
-        /tmp/* \
-        /usr/share/doc/* \
-        /var/cache/* \
-        /var/lib/apt/lists/* \
-        /var/tmp/*
+    && apt-get install -y google-chrome-stable
 
 # Setup node
 ENV NODE_VERSION=8.x
